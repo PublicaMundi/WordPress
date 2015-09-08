@@ -18,6 +18,7 @@
  */
 class WP_Scripts extends WP_Dependencies {
 	public $base_url; // Full URL with trailing slash
+	public $base_path; 
 	public $content_url;
 	public $default_version;
 	public $in_footer = array();
@@ -128,7 +129,7 @@ class WP_Scripts extends WP_Dependencies {
 
 		$this->print_extra_script( $handle );
 		if ( !preg_match('|^(https?:)?//|', $src) && ! ( $this->content_url && 0 === strpos($src, $this->content_url) ) ) {
-			$src = $this->base_url . $src;
+			$src = $this->base_path . $src;
 		}
 
 		if ( !empty($ver) )

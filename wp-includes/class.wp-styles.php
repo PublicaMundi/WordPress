@@ -18,6 +18,7 @@
  */
 class WP_Styles extends WP_Dependencies {
 	public $base_url;
+	public $base_path;
 	public $content_url;
 	public $default_version;
 	public $text_direction = 'ltr';
@@ -194,7 +195,7 @@ class WP_Styles extends WP_Dependencies {
 	 */
 	public function _css_href( $src, $ver, $handle ) {
 		if ( !is_bool($src) && !preg_match('|^(https?:)?//|', $src) && ! ( $this->content_url && 0 === strpos($src, $this->content_url) ) ) {
-			$src = $this->base_url . $src;
+			$src = $this->base_path . $src;
 		}
 
 		if ( !empty($ver) )

@@ -97,8 +97,9 @@ function wp_initial_constants() {
  * @since 3.0.0
  */
 function wp_plugin_directory_constants() {
+	$site_url = parse_url(get_option('siteurl'));	
 	if ( !defined('WP_CONTENT_URL') )
-		define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content'); // full url - WP_CONTENT_DIR is defined further up
+		define( 'WP_CONTENT_URL', '//' . $site_url['host'] . $site_url['path'] . '/wp-content');
 
 	/**
 	 * Allows for the plugins directory to be moved from the default location.
