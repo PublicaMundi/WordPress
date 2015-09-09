@@ -1,1 +1,15 @@
 uploads
+
+themes/*
+!themes/index.php
+!themes/twentyten
+!themes/twentyeleven
+!themes/twentytwelve
+!themes/twentythirteen
+!themes/twentyfourteen
+!themes/twentyfifteen
+
+plugins/*
+!plugins/hello.php
+!plugins/index.php
+!plugins/relative-url
