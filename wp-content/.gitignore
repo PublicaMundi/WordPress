@@ -13,3 +13,4 @@ plugins/*
 !plugins/hello.php
 !plugins/index.php
 !plugins/relative-url
+!plugins/wp-twitter-autopost
