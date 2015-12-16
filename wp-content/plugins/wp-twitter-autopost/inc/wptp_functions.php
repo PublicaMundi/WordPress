@@ -27,12 +27,9 @@ function wptp_twitter_api_link( $post_ID ) {
     global $BASE_URL;
 	$ex_link = false;
 	$tweet_link = get_option('wptp_tweet_custom_link');
-	//$post = get_post($post_ID);
-	//$category = trim($post['category']);
     $permalink = get_permalink( $post_ID );
     $relative = wp_make_link_relative($permalink);
     $permalink = $BASE_URL . $relative;
-    error_log('wp-twitter-autopost: Created link ' . $permalink, 0);
 	if ( $tweet_link != '' ) {
 		$ex_link = get_post_meta( $post_ID, $tweet_link, true );
 	}
@@ -179,14 +176,16 @@ function wptp_post_to_twtrAPI( $twit, $auth=false, $id=false, $media=false ) {
 }
 
 function wptp_sanatize( $string ) {
-	if ( version_compare( PHP_VERSION, '5.0.0', '>=' ) && function_exists('normalizer_normalize') && 1==2 ) {
+    if ( version_compare( PHP_VERSION, '5.0.0', '>=' ) && function_exists('normalizer_normalize') && 1==2 ) {
 		if ( normalizer_is_normalized( $string ) ) {
 			return $string;
 		}
 		return normalizer_normalize( $string );
-	} else {
-		return preg_replace( '~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml|mp);~i', '$1', htmlentities( $string, ENT_NOQUOTES, 'UTF-8' ) );
-	}
+    } else {
+        return $string;
+		//return preg_replace( '~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml|mp);~i', '$1', htmlentities( $string, ENT_NOQUOTES, 'UTF-8' ) );
+    }
+     
 }
 
 function wptp_ssl_chk( $url ) {
@@ -197,7 +196,6 @@ function wptp_ssl_chk( $url ) {
 }
 
 function wptp_trim_tweets( $tweet, $post, $post_ID, $retweet=false, $ref=false ) {
-	error_log('wp-twitter-autopost: Enter wptp_trim_tweets, post=' . print_r($post['shortUrl'], 1));
     $tweet_length = ( wptp_post_media_get( $post_ID ) ) ? 117 : 139;
 	$tweet = trim(wptp_user_codes( $tweet, $post_ID ));
 	$shrink = apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
@@ -275,11 +273,11 @@ function wptp_trim_tweets( $tweet, $post, $post_ID, $retweet=false, $ref=false )
 		return $post_tweet; 
 	} else {
 	
-		$length = get_option( 'wptp_excerpt_post' );
+        $length = get_option( 'wptp_excerpt_post' );
 		$excerpt_post = array();
 		$default_order = array(
-				'excerpt'=>0,
-				'title'=>1,
+				'title'=>0,
+				'excerpt'=>1,
 				'date'=>2,
 				'category'=>3,
 				'blogname'=>4,
@@ -291,7 +289,8 @@ function wptp_trim_tweets( $tweet, $post, $post_ID, $retweet=false, $ref=false )
 				'cat_desc'=>10
 		);
 		$excerpt_post['excerpt'] = wptp_strlen( wptp_sanatize( $excerpt ),$encoding );
-		$excerpt_post['title'] = wptp_strlen( wptp_sanatize( $title ),$encoding );
+        $excerpt_post['title'] = wptp_strlen( wptp_sanatize( $title ), $encoding );
+
 		$excerpt_post['category'] = wptp_strlen( wptp_sanatize( $category ),$encoding );
 		$excerpt_post['cat_desc'] = wptp_strlen( wptp_sanatize( $cat_desc ),$encoding );
 		$excerpt_post['@'] = wptp_strlen( wptp_sanatize( $uaccount ),$encoding );
@@ -321,7 +320,7 @@ function wptp_trim_tweets( $tweet, $post, $post_ID, $retweet=false, $ref=false )
 					$old_value = ${
 						$key};
 						$post_tweet = str_ireplace( $thisposturl, '#url#', $post_tweet );
-						if ( $key == 'account' || $key == 'author' || $key == 'category' || $key == 'date' || $key == 'modified' || $key == 'reference' || $key == '@' ) {
+                        if ( $key == 'account' || $key == 'author' || $key == 'category' || $key == 'date' || $key == 'modified' || $key == 'reference' || $key == '@' ) {
 							$new_value = '';
 						} else if ( $key == 'tags' ) {
 							if (wptp_strlen($old_value)-$trim <= 2) {
@@ -352,7 +351,8 @@ function wptp_trim_tweets( $tweet, $post, $post_ID, $retweet=false, $ref=false )
 				$post_tweet = ( strpos( $post_tweet,'#url#' ) === false )?$sub_sentence:str_ireplace( '#url#',$thisposturl,$post_tweet );
 			}
 		}
-	}
+    }
+
 	return $post_tweet;
 }
 ?>
