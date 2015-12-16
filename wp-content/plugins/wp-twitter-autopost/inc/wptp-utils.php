@@ -183,8 +183,10 @@ function wptp_get_url( $url, $method='GET', $body='', $headers='', $return='body
 }
 
 if (!function_exists('wptp_strlen')) {
-	function wptp_strlen( $str, $enc = '' ) {
-		$counts = count_chars( $str );
+    function wptp_strlen( $str, $enc = 'UTF-8' ) {
+        return mb_strlen( $str, $enc);
+        /*
+        $counts = count_chars( $str );
 		$total = 0;
 		for( $i = 0; $i < 0x80; $i++ ) {
 			$total += $counts[$i];
@@ -192,7 +194,8 @@ if (!function_exists('wptp_strlen')) {
 		for( $i = 0xc0; $i < 0xff; $i++ ) {
 			$total += $counts[$i];
 		}
-		return $total;
+        return $total;
+         */
 	}
 }
 
