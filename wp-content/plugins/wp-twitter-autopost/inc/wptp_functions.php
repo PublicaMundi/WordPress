@@ -1,6 +1,6 @@
 <?php
 
-$BASE_URL = 'http://geodata.gov.gr/content/';
+$BASE_URL = 'http://geodata.gov.gr';
 
 function wpt_commments_removed() {
 	if ( isset($_GET['dismiss']) ) {
@@ -32,6 +32,7 @@ function wptp_twitter_api_link( $post_ID ) {
     $permalink = get_permalink( $post_ID );
     $relative = wp_make_link_relative($permalink);
     $permalink = $BASE_URL . $relative;
+    error_log('wp-twitter-autopost: Created link ' . $permalink, 0);
 	if ( $tweet_link != '' ) {
 		$ex_link = get_post_meta( $post_ID, $tweet_link, true );
 	}
@@ -196,9 +197,10 @@ function wptp_ssl_chk( $url ) {
 }
 
 function wptp_trim_tweets( $tweet, $post, $post_ID, $retweet=false, $ref=false ) {
-	$tweet_length = ( wptp_post_media_get( $post_ID ) ) ? 117 : 139;
+	error_log('wp-twitter-autopost: Enter wptp_trim_tweets, post=' . print_r($post['shortUrl'], 1));
+    $tweet_length = ( wptp_post_media_get( $post_ID ) ) ? 117 : 139;
 	$tweet = trim(wptp_user_codes( $tweet, $post_ID ));
-	$shrink = ( $post['shortUrl'] != '' )?$post['shortUrl']:apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
+	$shrink = apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
 	$auth = $post['authId'];
 	$title = trim( apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' ) );
 	$blogname = trim($post['blogTitle']);

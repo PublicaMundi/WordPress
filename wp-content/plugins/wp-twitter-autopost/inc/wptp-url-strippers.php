@@ -27,7 +27,8 @@ if ( !function_exists( 'wptp_do_link_shorten' ) ) {
 			$keyword_format = ( get_option( 'wptp_keyword_format_config' ) == '1' )?$post_ID:false;
 			$keyword_format = ( get_option( 'wptp_keyword_format_config' ) == '2' )?get_post_meta( $post_ID,'_yourls_keyword',true ):$keyword_format;
 			$error = '';
-			switch ( get_option( 'wptp_url_stripper' ) ) {
+			$shortening_option = get_option( 'wptp_url_stripper' );
+            switch ( $shortening_option ) {
 				case 0:
 				case 1:
 				case 3:
@@ -59,8 +60,9 @@ if ( !function_exists( 'wptp_do_link_shorten' ) ) {
 					$target = "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBSnqQOg3vX1gwR7y2l-40yEG9SZiaYPUQ";					
 					$body = "{'longUrl':'$url'}";
 					$json = wptp_get_url( $target, 'POST', $body, 'Content-Type: application/json' );
-					$decoded = json_decode($json);
+                    $decoded = json_decode($json);
 					$shrink = $decoded->id;
+					error_log('wp-twitter-autopost: Shortened link: ' . $decoded->id, 0);
 					if ( !wptp_url_validator($shrink) ) { $shrink = false; }
 					break;
 				case 9:
